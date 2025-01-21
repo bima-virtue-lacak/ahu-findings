@@ -172,8 +172,81 @@
 43. **File: `/app/form_cetak_lampiran.php`**
    - Line 10: `SELECT a.*, b.nama_provinsi as wilayah FROM tbl_transaksi_all_v as a, tbl_provinsi as b  WHERE  a.kedudukan=b.id and a.no_transaksi='$id'`
 
+44. **File: '/app/form_cetak_log.php'**
+   - Query: `SELECT a.*, b.nama_provinsi as wilayah, pemberi.* FROM tbl_transaksi_all_v as a, tbl_provinsi as b, tbl_pemberi_fidusia pemberi WHERE pemberi.no_transaksi = a.no_transaksi and a.no_transaksi='$id'`
+   - Query: `SELECT a.*, pemberi.* FROM tbl_transaksi_all_v as a, tbl_pemberi_fidusia pemberi WHERE pemberi.no_transaksi = a.no_transaksi and a.no_transaksi='$id'`
+   - Query: `SELECT * FROM tbl_pemberi_fidusia as a WHERE a.no_transaksi='$id'`
 
+45. **File: '/app/form_cetak_log_xl.php'**
+   - Query: `SELECT * FROM tbl_pemberi_fidusia as a WHERE a.no_transaksi='$id'`
 
+46. **File: '/app/form_cetak_manual.php'**
+   - Query: `SELECT a.*, b.nama_provinsi as wilayah, pemberi.* FROM tbl_transaksi_all_v as a, tbl_provinsi as b, tbl_pemberi_fidusia pemberi WHERE pemberi.no_transaksi = a.no_transaksi and a.no_transaksi='$id'`
+   - Query: `SELECT * FROM tbl_pemberi_fidusia as a WHERE a.no_transaksi='$id'`
+
+47. **File: '/app/form_cetak_pernyataan.php'**
+   - Query: `SELECT a.*, b.nama_provinsi as wilayah, pemberi.* FROM tbl_transaksi_all_v as a, tbl_provinsi as b, tbl_pemberi_fidusia pemberi WHERE pemberi.no_transaksi = a.no_transaksi and a.no_transaksi='$id'`
+   - Query: `SELECT * FROM tbl_pemberi_fidusia as a WHERE a.no_transaksi='$id'`
+
+48. **File: '/app/form_cetak_sertifikat.php'**
+   - Query: `SELECT a.*, b.nama_provinsi as wilayah FROM tbl_transaksi_all_v as a, tbl_provinsi as b WHERE a.tempat_obyek=b.kode_provinsi and a.no_transaksi='$id'`
+   - Query: `SELECT * FROM tbl_pemberi_fidusia WHERE no_transaksi='$id'`
+
+49. **File: '/app/form_cetak_sertifikat_perubahan.php'**
+   - Query: `SELECT a.*, b.nama_provinsi as wilayah FROM tbl_transaksi_all_v as a, tbl_provinsi as b WHERE a.tempat_obyek=b.kode_provinsi and a.no_transaksi='$id'`
+   - Query: `SELECT * FROM tbl_pemberi_fidusia WHERE no_transaksi='$id'`
+
+50. **File: `/app/form_cetak_sertifikat_roya.php`**
+    - `SELECT a.options, a.flag_dollar, a.tempat_obyek, ... FROM tbl_transaksi_all_v as a, tbl_provinsi as b, tbl_transaksi_roya c WHERE a.tempat_obyek=b.kode_provinsi and a.no_transaksi=c.no_transaksi_baru and $where`
+    - `UPDATE tbl_transaksi a SET flag_cetak=1, tgl_cetak=now(), id_cetak='$user' WHERE $where`
+    - `SELECT ... FROM tbl_transaksi WHERE no_transaksi='$id'`
+    - `SELECT ... FROM tbl_nama_penerima WHERE no_transaksi='$line->no_transaksi'`
+    - `SELECT ... FROM tbl_kurs WHERE no_transaksi='$line->no_transaksi' AND jaminan_fidusia_dollar='0.00'
+    - `SELECT ... FROM tbl_transaksi WHERE no_transaksi='$line->no_transaksi_lama'`
+
+51. **File: `/app/form_cetak_sertifikat_roya_pdf.php`**
+    - `SELECT a.type, a.tgl_transaksi_roya FROM tbl_transaksi_roya_$suffixTable a WHERE a.no_transaksi_baru='$id'`
+    - `SELECT ... FROM z_setting WHERE key='live_date_format_sk_penghapusan_2024'`
+    - `SELECT ... FROM tbl_transaksi WHERE no_transaksi='$id'`
+    - `SELECT ... FROM tbl_nama_penerima WHERE no_transaksi='$line->no_transaksi'`
+
+52. **File: `/app/form_cetak_sertifikat_roya_pdf_new.php`**
+    - `SELECT ... FROM tbl_transaksi_all_v as a, tbl_provinsi as b, tbl_transaksi_roya c WHERE a.tempat_obyek=b.kode_provinsi and a.no_transaksi=c.no_transaksi_baru and $where`
+    - `SELECT ... FROM tbl_kurs WHERE no_transaksi='$line->no_transaksi' AND jaminan_fidusia_dollar='0.00'`
+
+53. **File: `/app/form_cuti.php`**
+    - `SELECT status_cuti FROM tbl_verifikator_flag WHERE id_user='$user_id'`
+    - `SELECT status_cuti FROM tbl_kasie_flag WHERE id_user='$user_id'`
+    - `SELECT COALESCE(count(*),0) FROM tbl_transaksi_perbaikan_... WHERE status=0 and verifikator=".$user_id`
+
+54. **File: `/app/form_daftar.php`**
+    - `SELECT value FROM z_setting WHERE key='bl_prefix'`
+    - `SELECT value FROM z_setting WHERE key='wl_prefix'`
+    - `SELECT * FROM tbl_draft_transaksi WHERE id_draft = '$get_id'`
+    - `SELECT no_sertifikat, waktu_transaksi FROM tbl_transaksi WHERE no_transaksi = '$line->no_transaksi_lama'`
+
+55. **File: `/app/form_daftar_manual.php`**
+- `SELECT * FROM tbl_draft_transaksi WHERE id_draft = '$get_id'`
+- `SELECT master_category_id as id, name FROM o_master_category WHERE master_category_id IN (...)`
+- `SELECT value FROM z_setting WHERE key="tgl_akta_f"`
+- `SELECT value FROM z_setting WHERE key="mindate_ak"`
+
+56. **File: `/app/form_daftar_manual_detail.php`**
+- `SELECT ... FROM zz_manual_transaksi AS a, zz_manual_pemberi_fidusia AS b, zz_manual_penerima_fidusia AS c WHERE a.no_transaksi='$no_trans' AND ...`
+- `SELECT no_transaksi, jaminan_fidusia_dollar, nilai_penjaminan_dollar, inisial_kurs, sebutan, nilai_kurs FROM zz_manual_kurs WHERE no_transaksi='$data_transaksi->no_transaksi'`
+- `SELECT master_category_id as id, name FROM o_master_category WHERE master_category_id IN (...)`
+
+57. **File: `/app/form_daftar_manual_edit.php`**
+- `SELECT ... FROM zz_manual_transaksi AS a, zz_manual_pemberi_fidusia AS b, zz_manual_penerima_fidusia AS c WHERE a.no_transaksi='$no_trans' AND ...`
+- `SELECT no_transaksi, jaminan_fidusia_dollar, nilai_penjaminan_dollar, inisial_kurs, sebutan, nilai_kurs FROM zz_manual_kurs WHERE no_transaksi='$data_transaksi->no_transaksi'`
+
+58. **File: `/app/form_daftar_manualX.php`**
+- `SELECT * FROM tbl_draft_transaksi WHERE id_draft = '$get_id'`
+- `SELECT master_category_id as id, name FROM o_master_category WHERE master_category_id IN (...)`
+
+59. **File: `/app/form_daftar_old.php`**
+- `SELECT ... FROM ...` (not specified in the provided code)
+- 
 ## HTTP Calls
 
 1. **File: `/app/_voucher_list.php`**
@@ -289,3 +362,35 @@
 
 43. **File: `/app/form_cetak_log.php`**
    - Line 15: `curl_simpadhu($db, $id, $waktu, $tipe_transaksi, $id_mapping, $expired)`
+
+44. **File: `/app/form_cuti.php`**
+    - AJAX Call: `$.ajax({ url: 'app/cekmesin.php', type: 'POST', data: sqw })`
+    - AJAX Call: `$.ajax({ url: 'app/load_bakum.php', type: 'POST', data: { name: request.term, source: sourceType } })`
+
+45. **File: `/app/form_daftar.php`**
+    - AJAX Call: `$.ajax({ url: 'app/load_table.php', type: 'POST', data: { table_type: table, param: name, val: val, _status: _x } })`
+    - AJAX Call: `$.ajax({ url: 'app/load_bakum.php', type: 'POST', data: { name: request.term, source: sourceType } })`
+
+46. **File: `/app/form_cetak_sptjm_pdf.php`**
+    - AJAX Call: `$.ajax({ url: 'app/response.php', type: 'POST', data: sqw })`
+
+47. **File: `/app/form_daftar_manual.php`**
+- `$.ajax({ url:'app/response.php', type:'POST', ... })`
+- `$.post('app/cekmesin.php', {...})`
+- `$.post('app/load_kategori.php', {...})`
+- `$.post('app/terbilang_act.php', {...})`
+- `$.ajax({ url:'no_login/bananasplit.php', type:'POST', ... })`
+- `$.ajax({ url:'app/cek_harga_pendaftaran.php', type:'POST', ... })`
+- `$.ajax({ url:'app/add_act_manual.php', type:'POST', ... })`
+
+48. **File: `/app/form_daftar_manual_detail.php`**
+- `$.ajax({ url: "app/suggest_name_notariat.php", ... })`
+
+49. **File: `/app/form_daftar_manual_edit.php`**
+- `$.ajax({ url:'app/add_act_manual_edit.php', type:'POST', ... })`
+
+50. **File: `/app/form_daftar_manualX.php`**
+- `$.post('app/load_kategori.php', {...})`
+
+51. **File: `/app/form_daftar_old.php`**
+- `$.post('app/load_table.php', {...})`

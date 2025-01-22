@@ -425,6 +425,57 @@
 100. **File: `/app/pesan_notification.php`**
    - `SELECT COUNT(*) as total from AHU_FIDUSIA.tbl_notification_user WHERE user_id IN('$id','$idk') AND is_read = 0 AND user_id !=0`
 
+101. **File: `/app/sertifikat_act.php`**
+   - `SELECT date(waktu_transaksi) as waktu_transaksi, tempat_obyek, flag_proses, a.no_sertifikat, jumlah_billing, a.ket_syarat, b.flag_pembayaran FROM tbl_transaksi a, tbl_billing b WHERE a.no_transaksi=b.no_transaksi and a.no_transaksi='$id'`
+   - `insert into tbl_no_urut_sert values($tahun, $kode_wilayah, 1) on duplicate key update no_urut=no_urut+1`
+   - `SELECT kode_wil FROM tbl_provinsi WHERE kode_provinsi='$kode_wilayah'`
+   - `update tbl_transaksi set options='$ttdo',flag_proses ='1', no_sertifikat ='$no_sertifikat' where no_transaksi='$id'`
+   - `update tbl_billing set flag_pembayaran=1, tgl_pembayaran='$date2' where no_transaksi='$id'`
+   - `INSERT INTO tbl_force (no_transaksi, proses, waktu_akses, user_id, nama_user) values('".$id."', 'Flagging','".$datez."','".$user."','".$user_name."')`
+   - `insert into tbl_summary(tanggal,tempat_obyek,$teks,pnbp_{$teks}) values ('{$_POST['date']}', $kode_wilayah,1,{$jumlah_billing}) on duplicate key update {$teks} = {$teks}+1, pnbp_{$teks}=pnbp_{$teks}+{$jumlah_billing}`
+
+102. **File: `/app/sertifikat_show.php`**
+   - `select a.waktu_transaksi, a.no_transaksi , a.nm_notaris, date(d.tgl_pembayaran) as tanggal, d.flag_pembayaran as flag, b.nama_provinsi, a.flag_proses as flag_proses, a.no_sertifikat as sertifikat, d.no_invoice_payment as no_invoice from tbl_transaksi_pregen as a, tbl_provinsi as b, tbl_billing as d WHERE a.no_transaksi='$id' and a.no_transaksi=d.no_transaksi and a.tempat_obyek=b.kode_provinsi limit 1`
+
+103. **File: `/app/show_korp.php`**
+   - `SELECT nama, npwp, nik, alamat, email, handphone FROM tbl_registrasi WHERE nama LIKE '{$nama}%' and tipe=1 AND jenis=2 limit 10`
+
+104. **File: `/app/suggest_name.php`**
+   - `SELECT b.id as olid, a.id AS id, a.nama, a.id_prov AS id_wilayah, a.nama_provinsi AS kedudukan, a.email FROM tbl_data_notaris a LEFT JOIN tbl_user b ON a.username=b.username WHERE a.nama LIKE  '{$nama}%' and a.id_kab='$wil' $tipe`
+
+105. **File: `/app/suggest_name_korporasi.php`**
+   - `SELECT b.id as olid, a.id AS id, a.nama, a.id_prov AS id_wilayah, a.nama_provinsi AS kedudukan, a.email FROM tbl_data_notaris a LEFT JOIN tbl_user b ON a.username=b.username WHERE a.nama LIKE  '{$nama}%' $tipe`
+
+106. **File: `/app/suggest_name_notariat.php`**
+   - `require_once "../config/curl_notariat.php";`
+
+107. **File: `/app/suggest_name_pesan.php`**
+   - `SELECT a.id AS id, a.nama, a.wilayah, a.email FROM tbl_data_notaris a LEFT JOIN tbl_user b ON a.username=b.username WHERE a.nama LIKE  '{$nama}%' and a.wilayah='$wil'`
+
+108. **File: `/app/unduh_daftar_perbaikan.php`**
+   - `SELECT a.id, a.status, a.no_transaksi, a.old_no_transaksi, a.no_sertifikat, a.nm_notaris, a.verifikator, b.nama AS staff, a.created_date AS created_date, a.approval_date AS approval_date, a.periksa, a.status AS status FROM {$table} AS a  LEFT JOIN tbl_user b ON a.verifikator = b.id WHERE {$condition} ORDER BY a.id`
+
+109. **File: `/app/unduh_pencarian_log.php`**
+   - `SELECT * FROM tbl_log_pencarian_fidusia_".$year." WHERE {$dateCond} {$cond} ORDER BY created_date DESC`
+
+110. **File: `/app/update_act_obyek.php`**
+   - `update tbl_transaksi set jenis_obyek='$category' where no_transaksi='$no_transaksi'`
+
+111. **File: `/app/upload_peraturan.php`**
+   - `$.ajax({url:'app/add_act_peraturan.php', type:'POST', processData: false, contentType: false, data: new FormData(abb), ...});`
+
+112. **File: `/app/upload_spesimen.php`**
+   - `SELECT kode_provinsi, nama_provinsi from tbl_provinsi`
+   - `SELECT * FROM tbl_spesimen WHERE id_wil > 0`
+   - `UPDATE tbl_spesimen set flag_ttd_aktif = '". $status ."' where id_wil='". $wilayah ."'`
+
+113. **File: `/app/view_assign.php`**
+   - `SELECT a.id_user, a.status_cuti, b.nama FROM tbl_verifikator_flag a LEFT JOIN tbl_user b ON a.id_user=b.id WHERE a.status_cuti=0 ORDER BY b.nama`
+   - `SELECT COUNT(*) FROM tbl_transaksi_perbaikan where no_transaksi='$id'`
+
+114. **File: `/app/view_list_perbaikan.php`**
+   - `SELECT * FROM tbl_transaksi_perbaikan WHERE no_transaksi='$id'`
+
 
 ## HTTP Calls
 
@@ -689,3 +740,13 @@
 
 85. **File: `/app/reset_user_act.php`**
    - `$.ajax({ url:'app/reset_user_act.php', type:'POST', data: abb, ...`
+
+86. **File: `/app/sertifikat_galau.php`**
+   - `$.post('app/sertifikat_show.php', {id:id}, function(data){...});`
+   - `$.ajax({url:'app/sertifikat_act.php', type:'POST', data: {id:id, date:date}, success : function(data){...}});`
+
+87. **File: `/app/suggest_name_notariat.php`**
+   - `$curl->_curl('service/suggestNotaris?sign='.$curl->generate_sign(), $post);`
+
+88. **File: `/app/upload_peraturan.php`**
+   - `$.ajax({url:'app/add_act_peraturan.php', type:'POST', processData: false, contentType: false, data: new FormData(abb), ...});`
